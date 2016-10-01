@@ -1,0 +1,61 @@
+
+<!-- saved from url=(0045)http://www.chobocho.com/javascript/timer.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+        <title> Timer </title>
+        <script language="JavaScript">
+          // 2016. 9. 28
+        
+          var timerId = NaN, mTime = 0;
+          
+          function startTimer() {
+              mTime = document.getElementById("timer").value;
+              timerId = setInterval(tick, 1000);
+              document.getElementById("reset").disabled = true;
+              document.getElementById("start").disabled = true;
+              document.getElementById("stop" ).disabled = false;
+              document.getElementById("timer").disabled = true;
+          }
+          
+          function stopTimer() {
+              clearInterval(timerId);
+              document.getElementById("reset").disabled = false;
+              document.getElementById("start").disabled = false;
+              document.getElementById("stop" ).disabled = true;
+              document.getElementById("timer").disabled = false;
+          }
+          
+          function resetTimer() {
+              mTime = 0;
+              document.getElementById("timer").value = mTime;
+          }
+        
+          function tick() {
+              mTime--;
+              document.getElementById("timer").value = mTime;
+              if (parseInt(mTime) <= 0) {
+                    stopTimer();
+                  alert("Time over!");
+              }
+          }
+        
+        </script>
+    </head>
+    
+    <body>
+        <table border="0" align="center">
+            <tbody><tr>
+                <td>
+                   <button onclick="startTimer()" id="start">Start</button>
+                   <button onclick="stopTimer()" id="stop" disabled="true">Stop</button>
+                   <button onclick="resetTimer()" id="reset" disabled="true">Reset</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="timer">
+                </td>
+            </tr>
+        </tbody></table>
+    
+
+</body></html>
