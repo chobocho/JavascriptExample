@@ -4,24 +4,46 @@
         <title> Timer </title>
         <script language="JavaScript">
           // 2016. 9. 28
+          // 2016.10. 1
         
           var timerId = NaN, mTime = 0;
+          
+          function start5mTimer() {
+            document.getElementById("timer").value = 300;
+            startTimer();
+          }
+          
+          function start15mTimer() {
+            document.getElementById("timer").value = 900;
+            startTimer();
+          }
+          
+          function start30mTimer() {
+            document.getElementById("timer").value = 1800;
+            startTimer();
+          }
+          
+          function disableButtons(flag) {
+              document.getElementById("reset").disabled = flag;
+              document.getElementById("start").disabled = flag;
+              document.getElementById("timer").disabled = flag;
+              document.getElementById("start5m").disabled = flag;
+              document.getElementById("start15m").disabled = flag;
+              document.getElementById("start30m").disabled = flag;
+          }
           
           function startTimer() {
               mTime = document.getElementById("timer").value;
               timerId = setInterval(tick, 1000);
-              document.getElementById("reset").disabled = true;
-              document.getElementById("start").disabled = true;
+
+              disableButtons(true);
               document.getElementById("stop" ).disabled = false;
-              document.getElementById("timer").disabled = true;
           }
           
           function stopTimer() {
               clearInterval(timerId);
-              document.getElementById("reset").disabled = false;
-              document.getElementById("start").disabled = false;
+              disableButtons(false);
               document.getElementById("stop" ).disabled = true;
-              document.getElementById("timer").disabled = false;
           }
           
           function resetTimer() {
@@ -33,7 +55,7 @@
               mTime--;
               document.getElementById("timer").value = mTime;
               if (parseInt(mTime) <= 0) {
-                    stopTimer();
+                  stopTimer();
                   alert("Time over!");
               }
           }
@@ -46,10 +68,15 @@
             <tbody><tr>
                 <td>
                    <button onclick="startTimer()" id="start">Start</button>
-                   <button onclick="stopTimer()" id="stop" disabled="true">Stop</button>
+                   <button onclick="stopTimer()"  id="stop"  disabled="true">Stop</button>
                    <button onclick="resetTimer()" id="reset" disabled="true">Reset</button>
                 </td>
             </tr>
+                <td>
+                   <button onclick="start5mTimer()"  id="start5m">5min</button>
+                   <button onclick="start15mTimer()" id="start15m">15min</button>
+                   <button onclick="start30mTimer()"  id="start30m">30min</button>
+                </td>
             <tr>
                 <td>
                     <input id="timer">
