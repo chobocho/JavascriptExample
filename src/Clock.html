@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title> My Clock </title>
+        <script language="JavaScript">
+          // 2016.10.10
+
+          var cvs;
+          var clockWidth = 200;
+          
+          function init() {
+              var canvas = document.getElementById("canvas")
+              cvs = canvas.getContext("2d");
+              drawPanel();
+              setInterval(tick, 1000);
+          }
+
+          function drawPanel() {
+              // Draw panel
+              cvs.strokeStyle = "black";
+              var width = clockWidth/2;
+ 
+              for (var i = 0; i < 12; i++) {          
+                  cvs.beginPath();
+                  var r = Math.PI / 6 * i;
+                  var size = 0.9;
+                  cvs.moveTo(width + width * size * Math.sin(r), width + width * size * Math.cos(r));
+                  cvs.lineTo(width + width * Math.sin(r), width + width * Math.cos(r));
+                  cvs.closePath();
+                  cvs.stroke();
+              }
+          }
+          
+          function drawClock() {
+              var width = clockWidth/2;
+              cvs.strokeStyle = "black";
+              
+              var currentTime = new Date();
+              var h = currentTime.getHours() % 12;
+              var m = currentTime.getMinutes();
+              var s = currentTime.getSeconds();
+ 
+              if ( s === 0 ) {
+                  cvs.fillStyle = "white";
+                  cvs.fillRect(0, 0, clockWidth, clockWidth);
+                  drawPanel();
+              }
+ 
+              cvs.beginPath();
+              var rh = Math.PI / 6 * h + Math.PI / 6 * ( m / 60 );
+              var sizeh = 0.6;
+              cvs.moveTo(width, width);
+              cvs.lineTo(width + width * sizeh * Math.sin(rh), width - width * sizeh * Math.cos(rh));
+              cvs.closePath();
+              cvs.stroke();    
+
+              cvs.beginPath();
+              var rm = Math.PI / 30 *  m;
+              var sizeM = 0.7;
+              cvs.moveTo(width, width);
+              cvs.lineTo(width + width * sizeM * Math.sin(rm), width - width * sizeM * Math.cos(rm));
+              cvs.closePath();
+              cvs.stroke();                 
+             
+              cvs.beginPath();
+              var rs = Math.PI / 30 *  s;
+              var sizeS = 0.9;
+              var sizeS2 = 0.95;
+              cvs.strokeStyle = "red";
+              cvs.moveTo(width + width * sizeS * Math.sin(rs), width - width * sizeS * Math.cos(rs));
+              cvs.lineTo(width + width * sizeS2 * Math.sin(rs), width - width * sizeS2 * Math.cos(rs));
+              cvs.closePath();
+              cvs.stroke();    
+              
+              document.getElementById("time").textContent = h + ":" + m + ":" + s;               
+          }
+                  
+          function tick() {
+              drawClock();
+          }
+        
+        </script>
+    </head>
+    
+    <body onload="init()">
+         <table border="0" align="center">
+             <tr>
+                 <td>
+                     <canvas id="canvas" width="200" height="200"> </canvas>
+                 </td>
+             </tr>
+             <tr>
+                 <td align="center">
+                     <span id="time"></span>
+                 </td>
+             </tr>
+         </table>
+    </body>
+</html>
