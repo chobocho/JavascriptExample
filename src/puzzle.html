@@ -7,17 +7,27 @@
               width:60px;
               height:60px;
               font-size:32px;
-              background-color:"white";
+              background-color:white;
+              border:1px solid black;
+              box-shadow:black 2px 2px;
+            }
+            .matchTile {
+              text-align:center;
+              width:60px;
+              height:60px;
+              font-size:32px;
+              background-color:green;
               border:1px solid black;
               box-shadow:black 2px 2px;
             }
         </style> 
         <script language="JavaScript">
-          // 2016.10.10
+          // 2017. 1. 22
           
           var tile = [];
           var isPlay = false;
           var emptyTile = 0;
+          var timerId = NaN;
           
           function init() {
               var table = document.getElementById("puzzle");
@@ -82,10 +92,11 @@
                   default:
                       console.log("Error : Never come to here!");
                       break;
-              }   
+              }
           }
           
           function onKeyUp(e) {
+      
           }
           
           function onClick(e) {
@@ -113,6 +124,9 @@
                   swap(clkTile+5, clkTile);
                   emptyTile = clkTile;
               }
+              if (isFinish()) {
+                  sendGameEndEvent();
+              }
           }
 
           function swap(i, j) {
@@ -122,9 +136,10 @@
               tile[i].textContent = tile[j].textContent;
               tile[j].value = tmpValue;
               tile[j].textContent = tmpContent;
-              
-              if (isFinish()) {
-                  alert("Success");
+  
+              tile[i].className = (tile[i].value == (i+1)) ? "matchTile" : "tile";
+              if (tile[j].value == 0) {
+                  tile[j].className = "tile";              
               }
           }
           
@@ -142,8 +157,17 @@
                   }
               }
               return true;
-          }          
-        
+          }   
+
+          function sendGameEndEvent() {
+              timerId = setInterval(gameEnd, 300);
+          }
+          
+          function gameEnd() {
+              clearInterval(timerId);
+              alert("Success");
+          }        
+
         </script>
     </head>
     
