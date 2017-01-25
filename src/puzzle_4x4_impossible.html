@@ -1,0 +1,208 @@
+<html>
+    <head>
+        <title> My Puzzle </title>
+        <style>
+            .tile {
+              text-align:center;
+              width:60px;
+              height:60px;
+              font-size:32px;
+              background-color:white;
+              border:1px solid black;
+              box-shadow:black 2px 2px;
+            }
+            .matchTile {
+              text-align:center;
+              width:60px;
+              height:60px;
+              font-size:32px;
+              background-color:green;
+              border:1px solid black;
+              box-shadow:black 2px 2px;
+            }
+        </style> 
+        <script language="JavaScript">
+          // 2017. 1. 22
+          
+          var tile = [];
+          var isPlay = false;
+          var emptyTile = 0;
+          var timerId = NaN;
+          var timer_1sec = NaN;
+          var move = 0;
+          var gameTime = 0;
+          var tileSize = 4;
+          var answer = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14, 0 ];
+          
+          function init() {
+              var table = document.getElementById("puzzle");
+          
+              window.onkeydown = onKeyDown;
+              window.onkeyup   = onKeyUp;
+          
+              for (var i = 0; i < tileSize; i++) {
+                  var tr = document.createElement("tr");
+                  for (var j = 0; j < tileSize; j++) {
+                      var td = document.createElement("td");
+                      td.className="tile";
+                      var idx = i*tileSize + j;
+                   
+                      td.value = idx;
+                      td.index = idx;
+                      td.textContent = (idx === 0) ? "" : idx;
+                      td.onclick = onClick;
+                      tile.push(td);
+                      tr.appendChild(td);
+                  }
+                  table.appendChild(tr);
+              }
+             
+              alert("Click to Start!");             
+              //for (var i = 0; i < 1000; i++) {
+                  //onClick( {srcElement: {index : Math.floor(Math.random() * tileSize * tileSize)}})
+              //}
+              move = 0;
+              isPlay = true;
+              timer_1sec = setInterval(tick, 200);
+          }
+
+          function onKeyDown(e) {
+              if (!isPlay) return;
+              var key = e.keyCode;
+              var emTile = emptyTile;
+              console.log("Key : " + key);
+              console.log("Empty Tile : " + emptyTile);
+              var x = emTile % tileSize;
+              var y = emTile / tileSize;              
+               
+              switch(key) {
+                  case 37: // LEFT
+                      if (x+1 < tileSize) {
+                           moveTile(emptyTile+1);
+                      }                
+                      break;
+                  case 38: // UP
+                      if (y+1 < tileSize) {
+                           moveTile(emptyTile+tileSize);
+                      }
+                      break;
+                  case 39: // RIGHT
+                      if (x-1 >= 0) {
+                           moveTile(emptyTile-1);
+                      }                
+                      break;
+                  case 40: // DOWN
+                      if (y-1 >= 0) {
+                           moveTile(emptyTile-tileSize);
+                      }
+                      break;                      
+                  default:
+                      console.log("Error : Never come to here!");
+                      break;
+              }
+          }
+          
+          function onKeyUp(e) {
+      
+          }
+          
+          function onClick(e) {
+              var clkTile = e.srcElement.index;
+              moveTile(clkTile);
+          }
+          
+          function moveTile(clkTile) { 
+              var x = clkTile % tileSize;
+              var y = clkTile / tileSize;
+
+              if (x-1 >= 0 && tile[clkTile-1].value == 0) {
+                  swap(clkTile-1, clkTile);
+                  emptyTile = clkTile;
+              }
+              else if (x+1 <  tileSize && tile[clkTile+1].value == 0) {
+                  swap(clkTile+1, clkTile);
+                  emptyTile = clkTile;
+              }
+              else if (y-1 >=0 && tile[clkTile-tileSize].value == 0 ) {
+                  swap(clkTile-tileSize, clkTile);
+                  emptyTile = clkTile;
+              }
+              else if (y+1 < tileSize && tile[clkTile+tileSize].value == 0) {
+                  swap(clkTile+tileSize, clkTile);
+                  emptyTile = clkTile;
+              }
+              if (isFinish()) {
+                  sendGameEndEvent();
+              }
+          }
+
+          function swap(i, j) {
+              var tmpValue = tile[i].value;
+              var tmpContent = tile[i].textContent;
+              tile[i].value = tile[j].value;
+              tile[i].textContent = tile[j].textContent;
+              tile[j].value = tmpValue;
+              tile[j].textContent = tmpContent;
+  
+              tile[i].className = (tile[i].value == answer[i]) ? "matchTile" : "tile";
+              if (tile[j].value == 0) {
+                  tile[j].className = "tile";              
+              }
+              if (isPlay) {
+                  move++;
+                  document.getElementById("move").textContent = "Move : " + move;
+              }
+          }
+          
+          function isFinish() {
+              for (var i = 0; i < tileSize; i++) {
+                  for (var j = 0; j < tileSize; j++) {
+                      var idx = i*tileSize + j;
+                      if (tile[idx].value != answer[idx]) {
+                          return false;
+                      } 
+
+                  }
+              }
+              return true;
+          }   
+
+          function sendGameEndEvent() {
+              timerId = setInterval(gameEnd, 300);
+          }
+          
+          function gameEnd() {
+              clearInterval(timerId);
+              clearInterval(timer_1sec); 
+              alert("Success");
+          }        
+
+          function tick() {
+              gameTime += 0.2;
+              document.getElementById("time").textContent = "Time : " +  Number(gameTime.toFixed(1));  
+          }
+
+        </script>
+    </head>
+    
+    <body onload="init()">
+         <table align="center">
+              <tr>
+                  <td>
+                      <table id="puzzle" align="center">
+                      </table>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <span id="move">Move : 0</span>    
+                  </td>
+              </tr>
+              <tr>
+              <td>     
+                  <span id="time">Time : 0</span>
+              </td>
+              </tr>
+         </table>
+    </body>
+</html>
