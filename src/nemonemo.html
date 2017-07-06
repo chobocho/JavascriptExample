@@ -1,0 +1,277 @@
+<html>
+    <head>
+        <title> Nemo Nemo Logic </title>
+        <style>
+            .popupstyle {
+                display:none; 
+                position:fixed;
+                font-size:8px;
+                z-index:1; 
+                left:0;
+                top:0;
+            }
+            .tile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:white;
+              border:1px solid black;
+            }
+
+            .WhiteTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:white;
+            }
+
+            .GrayTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:LightGray;
+            }
+
+            .BlackTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:black;
+              border:1px solid gray;
+            }
+            .YellowTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:yellow;
+              border:1px solid gray;
+            }
+
+        </style> 
+        <script language="JavaScript">
+          // 2017. 1. 22
+          
+          var tile = [];
+          var isPlay = false;
+          var gameTime = 0;
+          var tileSize = 60;
+          var nonTile = 20;
+          var stackM = new Array();
+          var stackN = new Array();      
+          var isPopupShow = false;
+          var nemonemoLeft = "";
+          var nemonemoUp = "";
+          var nemonemoData = "";
+          
+          function showPopup() {
+              if (isPopupShow) {
+                  dataPopup.style.display = "none";
+                  isPopupShow = false;
+              } else  {             
+                  dataPopup.style.display = "block";
+                  nemonomoLeft = ""
+                  nemonemoUp = ""
+                  for (var i = nonTile; i < tileSize; ++i ) {
+                      var tmp = "";
+
+                      if (stackM[i].length == 0) {
+                           tmp = "0";
+                      } else {               
+                          for (var j = 0; j < stackM[i].length; ++j) {
+                              tmp += stackM[i][j] + " ";
+                          }
+                      }
+                      nemonemoLeft += tmp + "|"
+
+                      tmp = "";
+                      if (stackN[i].length == 0) {
+                           tmp = "0";
+                      } else {
+                          for (var j = 0; j < stackN[i].length; ++j) {
+                              tmp += stackN[i][j] + " ";
+                          }
+                      }
+                      nemonemoUp += tmp + "|"
+
+                  }
+                  nemonemoData = "+++<br>" + nemonemoLeft + "<br>+++<br>" + nemonemoUp +"<br>+++";
+                  document.getElementById("dataPopup").innerHTML = nemonemoData;
+                  isPopupShow = true;
+              }
+          }
+
+          function init() {
+              var table = document.getElementById("nemonemo");
+          
+              window.onkeydown = onKeyDown;
+              window.onkeyup   = onKeyUp;
+
+              for (var i = 0; i < tileSize; i++) {
+                  stackM[i] = new Array();
+                  stackN[i] = new Array();
+              }
+          
+              for (var i = 0; i < tileSize; i++) {
+                  var tr = document.createElement("tr");
+                  for (var j = 0; j < tileSize; j++) {
+                      var td = document.createElement("td");
+                      td.className="YellowTile";
+                      var idx = i*tileSize + j;    
+                      td.value = 0;
+                      td.index = idx;
+                      td.onclick = onClick;
+                      tile.push(td);
+                      tr.appendChild(td);
+                  }
+                  table.appendChild(tr);
+              }
+            
+
+              for (var i = nonTile; i < tileSize; i++) {
+                  for (var j = nonTile; j < tileSize; j++) {
+                      if ((i > nonTile && i % 5 == 4) || (j > nonTile && j % 5 == 4)) {
+                          tile[i*tileSize + j].className="GrayTile";
+                      } else {
+                          tile[i*tileSize + j].className = "tile"; 
+                      }
+
+                  }
+              }
+            
+              for (var i = 0; i < nonTile; i++) {
+                  for (var j = 0; j < nonTile; j++) {
+                      tile[i*tileSize + j].className = "WhiteTile";  
+                  }
+              }
+            
+              move = 0;
+              isPlay = true;
+          }
+
+          function onKeyDown(e) {
+    
+          }
+          
+          function onKeyUp(e) {
+
+          }
+          
+          function onClick(e) {
+              var clkTile = e.srcElement.index;
+              checkBoard(clkTile);
+              countBlock();
+          }
+          
+          function checkBoard(clkTile) { 
+              var x = clkTile % tileSize;
+              var y = parseInt(clkTile / tileSize);
+              
+              console.log("Clicked : " + x + " " + y);
+
+              if (( x >= nonTile) && ( y >= nonTile)) { 
+                   swap(clkTile);
+              } else {
+                return;
+              }
+
+              var cm = 0, cn = 0;
+              stackM[y].length = 0;  
+              stackN[x].length = 0;
+ 
+              for (var j = nonTile; j < tileSize; j++) {
+                  if (tile[y*tileSize+j].value == 0) {
+                      if (cm > 0) {
+                          stackM[y].push(cm);
+                          cm = 0;   
+                      } 
+                  } else {
+                      cm++;             
+                  }
+                  if (tile[j*tileSize+x].value == 0) {
+                      if (cn > 0) {
+                          stackN[x].push(cn);
+                          cn = 0;   
+                      } 
+                  } else {
+                      cn++;             
+                  }
+              }   
+
+  
+              if ( cm > 0) {
+                  stackM[y].push(cm);
+              }
+
+              if ( cn > 0) {
+                  stackN[x].push(cn);
+              }
+
+              // console.log("s>> " + stackM[y].length);
+              for (var j = 0; j < nonTile; ++j) {
+                   tile[y*tileSize + j].textContent = ""; 
+                   tile[j*tileSize + x].textContent = ""; 
+              }
+        
+              //console.log("s> " + j + " : " + stackM[y][j]);
+              for (var j = 0; j < stackM[y].length; ++j) {
+                   tile[y*tileSize + nonTile - stackM[y].length + j].textContent = stackM[y][j]; 
+              }
+                  
+              for (var j = 0; j < stackN[x].length; ++j) {
+                   //console.log("x> " + j + " : " + stackN[x][j]);
+                   tile[(j + nonTile - stackN[x].length) * tileSize + x].textContent = stackN[x][j]; 
+              }
+         
+              
+          }
+
+          function swap(i) {
+ 
+              if (tile[i].value == 0) {
+                  tile[i].className = "BlackTile";  
+                  tile[i].value = 1
+              } else {
+                  var x = i % tileSize;
+                  var y = parseInt(i / tileSize);
+                  if ((x > nonTile && x % 5 == 4) || (y > nonTile && y % 5 == 4)) {
+                      tile[i].className = "GrayTile";
+                  } else {
+                      tile[i].className = "tile";
+                  }
+                  tile[i].value = 0
+              }
+          }
+          
+          function countBlock() {
+              
+          }
+          
+          function gameEnd() {
+
+              alert("Success");
+          }        
+
+        </script>
+    </head>
+    
+    <body onload="init()">
+         <table align="center">
+              <tr>
+                  <td>
+                      <table id="nemonemo" align="center">
+                      </table>
+                  </td>
+              </tr>
+         </table>
+
+
+         <div id="dataPopup" class="popupstyle"></div>
+
+         <button id="btnShowdata" onClick="showPopup()">show data</button>
+    </body>
+</html>
