@@ -35,6 +35,41 @@
               background-color:LightGray;
             }
 
+            .BlueGrayTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              border:1px solid blue;
+              background-color:Gray;
+            }
+
+            .BlueWhiteTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              border:1px solid blue;
+              background-color:white;
+            }
+
+            .BlueBlackTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              border:1px solid blue;
+              background-color:black;
+            }
+
+           .BlueYellowTile {
+              text-align:center;
+              width:12px;
+              height:12px;
+              font-size:8px;
+              background-color:yellow;
+              border:1px solid blue;
+            }
             .BlackTile {
               text-align:center;
               width:12px;
@@ -122,9 +157,11 @@
                       var td = document.createElement("td");
                       td.className="YellowTile";
                       var idx = i*tileSize + j;    
-                      td.value = 0;
+                      td.value = 3;
                       td.index = idx;
                       td.onclick = onClick;
+                      td.onmouseover = onMouseOverTile;
+                      td.onmouseleave = onMouseLeaveTile;
                       tile.push(td);
                       tr.appendChild(td);
                   }
@@ -136,8 +173,10 @@
                   for (var j = nonTile; j < tileSize; j++) {
                       if ((i > nonTile && i % 5 == 4) || (j > nonTile && j % 5 == 4)) {
                           tile[i*tileSize + j].className="GrayTile";
+                          tile[i*tileSize + j].value = 2;
                       } else {
                           tile[i*tileSize + j].className = "tile"; 
+                          tile[i*tileSize + j].value = 0;
                       }
 
                   }
@@ -146,6 +185,7 @@
               for (var i = 0; i < nonTile; i++) {
                   for (var j = 0; j < nonTile; j++) {
                       tile[i*tileSize + j].className = "WhiteTile";  
+                      td.value = 5;
                   }
               }
             
@@ -167,6 +207,96 @@
               countBlock();
           }
           
+          function onMouseOverTile(e) {
+              var curTile = e.srcElement.index;
+              var x = curTile % tileSize;
+              var y = parseInt(curTile / tileSize);
+
+              if (x < nonTile || y < nonTile) {
+                  return;             
+              }
+
+              for (var j = 0; j < tileSize; j++) {
+                  switch(tile[y*tileSize+j].value) {
+                      case 0:
+                            tile[y*tileSize + j].className="BlueWhiteTile";
+                            break;
+                      case 1:
+                            tile[y*tileSize + j].className="BlueBlackTile";
+                            break;
+                      case 2:
+                            tile[y*tileSize + j].className="BlueGrayTile";
+                            break;
+                      case 3:
+                            tile[y*tileSize + j].className="BlueYellowTile";
+                            break;
+
+                  }
+
+                 var cur = j*tileSize+x;
+                 switch(tile[cur].value) {
+                      case 0:
+                            tile[cur].className="BlueWhiteTile";
+                            break;
+                      case 1:
+                            tile[cur].className="BlueBlackTile";
+                            break;
+                      case 2:
+                            tile[cur].className="BlueGrayTile";
+                            break;
+                      case 3:
+                            tile[cur].className="BlueYellowTile";
+                            break;
+
+                  }
+              }
+          }
+
+          function onMouseLeaveTile(e) {
+              var curTile = e.srcElement.index;
+              var x = curTile % tileSize;
+              var y = parseInt(curTile / tileSize);
+
+              if (x < nonTile || y < nonTile) {
+                  return;             
+              }
+
+              for (var j = 0; j < tileSize; j++) {
+                  switch(tile[y*tileSize+j].value) {
+                      case 0:
+                            tile[y*tileSize + j].className="tile";
+                            break;
+                      case 1:
+                            tile[y*tileSize + j].className="BlackTile";
+                            break;
+                      case 2:
+                            tile[y*tileSize + j].className="GrayTile";
+                            break;
+                      case 3:
+                            tile[y*tileSize + j].className="YellowTile";
+                            break;
+
+                  }
+
+                 var cur = j*tileSize+x;
+                 switch(tile[cur].value) {
+                      case 0:
+                            tile[cur].className="tile";
+                            break;
+                      case 1:
+                            tile[cur].className="BlackTile";
+                            break;
+                      case 2:
+                            tile[cur].className="GrayTile";
+                            break;
+                      case 3:
+                            tile[cur].className="YellowTile";
+                            break;
+
+                  }
+              }
+          }
+
           function checkBoard(clkTile) { 
               var x = clkTile % tileSize;
               var y = parseInt(clkTile / tileSize);
@@ -189,7 +319,7 @@
                           stackM[y].push(cm);
                           cm = 0;   
                       } 
-                  } else {
+                  } else if (tile[y*tileSize+j].value == 1) {
                       cm++;             
                   }
                   if (tile[j*tileSize+x].value == 0) {
@@ -197,7 +327,7 @@
                           stackN[x].push(cn);
                           cn = 0;   
                       } 
-                  } else {
+                  } else if (tile[j*tileSize+x].value == 1) {
                       cn++;             
                   }
               }   
@@ -232,18 +362,20 @@
 
           function swap(i) {
  
-              if (tile[i].value == 0) {
+              if (tile[i].value == 0 || tile[i].value == 2) {
                   tile[i].className = "BlackTile";  
-                  tile[i].value = 1
+                  tile[i].value = 1;
               } else {
                   var x = i % tileSize;
                   var y = parseInt(i / tileSize);
                   if ((x > nonTile && x % 5 == 4) || (y > nonTile && y % 5 == 4)) {
                       tile[i].className = "GrayTile";
+                      tile[i].value = 2;
                   } else {
                       tile[i].className = "tile";
+                      tile[i].value = 0;
                   }
-                  tile[i].value = 0
+                  
               }
           }
           
