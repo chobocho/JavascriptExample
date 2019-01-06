@@ -1,0 +1,139 @@
+<html>
+    <head>
+        <title> BMI Calculator </title>
+        <script language="JavaScript">
+            // 2019. 1. 6
+
+            function getbmi(w, h) {
+                return Math.round(w * 1000000 / (h * h)) / 100;
+            } 
+
+            function getBMI() {
+              var weight = 0;
+              var height = 0;
+              var bmi = 0;
+            
+              weight = document.getElementById("weight").value;
+              if (weight < 50) {
+                document.getElementById("bmiResult").innerHTML = "<h2>Error: Weight is lower than 50!</h2>";
+                return;
+              }
+
+              height = document.getElementById("height").value;
+              if (height < 100) {
+                document.getElementById("bmiResult").innerHTML = "<h2>Error: height is lower than 100!</h2>";
+                return;
+              }
+            
+              bmi = getbmi(weight, height);
+              document.getElementById("bmiResult").innerHTML = "<h2>BMI: "+ bmi +"</h2>";
+            }
+  
+          </script>
+    </head>
+    
+    <body>
+        <div id="bmiweigth">
+            Weight
+            <input id="weight">
+        </div>
+        <div id="bmiheight">
+            Height
+            <input id="height">
+        </div>
+        <div id="bmiCheckButton">
+            <button onclick="getBMI()" id="RunBmi">BMI</button>
+        </div>
+        <div id="bmiResult"></div>
+        <br>
+        <table border="1" style="border-collapse:collapse; border:1px gray solid;">
+            <tr>
+                <td>Weight</td>
+                <td>168cm</td>
+                <td>169cm</td>
+                <td>170cm</td>
+                <td>171cm</td>
+                <td>172cm</td>
+            </tr>
+            <tr>
+                <td>71</td>
+                <td bgcolor=#FF0000>25.16</td>
+                <td bgcolor=#FFFF00>24.86</td>
+                <td bgcolor=#FFFF00>24.57</td>
+                <td bgcolor=#FFFF00>24.28</td>
+                <td bgcolor=#FFFF00>24.00</td>
+            </tr>
+            <tr>
+                <td>70</td>
+                <td bgcolor=#FFFF00>24.80</td>
+                <td bgcolor=#FFFF00>24.51</td>
+                <td bgcolor=#FFFF00>24.22</td>
+                <td bgcolor=#FFFF00>23.94</td>
+                <td bgcolor=#FFFF00>23.66</td>
+            </tr>
+            <tr>
+                <td>69</td>
+                <td bgcolor=#FFFF00>24.45</td>
+                <td bgcolor=#FFFF00>24.16</td>
+                <td bgcolor=#FFFF00>23.88</td>
+                <td bgcolor=#FFFF00>23.60</td>
+                <td bgcolor=#FFFF00>23.32</td>
+            </tr>
+            <tr>
+                <td>68</td>
+                <td bgcolor=#FFFF00>24.09</td>
+                <td bgcolor=#FFFF00>23.81</td>
+                <td bgcolor=#FFFF00>23.53</td>
+                <td bgcolor=#FFFF00>23.26</td>
+                <td >22.99</td>
+            </tr>
+            <tr>
+                <td>67</td>
+                <td bgcolor=#FFFF00>23.74</td>
+                <td bgcolor=#FFFF00>23.46</td>
+                <td bgcolor=#FFFF00>23.18</td>
+                <td >22.91</td>
+                <td >22.65</td>
+            </tr>
+            <tr>
+                <td>66</td>
+                <td bgcolor=#FFFF00>23.38</td>
+                <td bgcolor=#FFFF00>23.11</td>
+                <td >22.84</td>
+                <td >22.57</td>
+                <td >22.31</td>
+            </tr>
+            <tr>
+                <td>65</td>
+                <td bgcolor=#FFFF00>23.03</td>
+                <td >22.76</td>
+                <td >22.49</td>
+                <td >22.23</td>
+                <td >21.97</td>
+            </tr>
+            <tr>
+                <td>64</td>
+                <td >22.68</td>
+                <td >22.41</td>
+                <td >22.15</td>
+                <td >21.89</td>
+                <td >21.63</td>
+            </tr>
+            <tr>
+                <td>63</td>
+                <td >22.32</td>
+                <td >22.06</td>
+                <td >21.80</td>
+                <td >21.55</td>
+                <td >21.30</td>
+            </tr>
+            <tr>
+                <td>62</td>
+                <td >21.97</td>
+                <td >21.71</td>
+                <td >21.45</td>
+                <td >21.20</td>
+                <td >20.96</td>
+            </tr>        </table>
+    </body>
+</html>
